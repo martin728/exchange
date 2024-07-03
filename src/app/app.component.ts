@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CustomDateFormatPipe } from './date.pipe';
 import { ExchangeComponent } from './exchange-board/exchange-board.component';
-import { DEFAULT_GIVE_CURRENCY } from './constants';
+import { DEFAULT_GIVE_CURRENCY, Rate } from './constants';
 import { CurrencyService } from './currency.service';
 
 @Component({
@@ -22,7 +22,7 @@ import { CurrencyService } from './currency.service';
   providers: [CurrencyService],
 })
 export class AppComponent implements OnInit {
-  exchangeRates!: { [key: string]: number };
+  exchangeRates!: Rate;
   today!: string;
   currency: string = DEFAULT_GIVE_CURRENCY;
   selectedCurrency: string = DEFAULT_GIVE_CURRENCY;
