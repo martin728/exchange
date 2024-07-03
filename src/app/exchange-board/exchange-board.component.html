@@ -1,0 +1,67 @@
+<form [formGroup]="form">
+  <h2>Welcome on board!</h2>
+  <p>Let's carry out some calculations 🚀</p>
+
+  <div class="control-row">
+    <div class="control">
+      <label for="giveCurrency">You give</label>
+      <select
+        id="giveCurrency"
+        name="giveCurrency"
+        formControlName="giveCurrency"
+        (change)="resetForm()"
+      >
+        <option
+          *ngFor="let currency of exchangeRates | keyvalue"
+          [value]="currency.key"
+        >
+          {{ currency.key }}
+        </option>
+      </select>
+    </div>
+    <div class="control">
+      <input
+        placeholder="0"
+        type="number"
+        formControlName="giveAmount"
+        step="10"
+        min="0"
+        (input)="updateGive()"
+      />
+    </div>
+  </div>
+
+  <div class="control-row">
+    <div class="control">
+      <label for="getCurrency">You get</label>
+      <select
+        id="getCurrency"
+        name="getCurrency"
+        formControlName="getCurrency"
+        (change)="resetForm()"
+      >
+        <option
+          *ngFor="let currency of exchangeRates | keyvalue"
+          [selected]="currency.key === 'USD'"
+          [value]="currency.key"
+        >
+          {{ currency.key }}
+        </option>
+      </select>
+    </div>
+    <div class="control">
+      <input
+        placeholder="0"
+        type="number"
+        formControlName="getAmount"
+        step="10"
+        min="0"
+        (input)="updateGet()"
+      />
+    </div>
+  </div>
+
+  <p class="form-actions">
+    <button type="button" class="button" (click)="resetForm()">Reset</button>
+  </p>
+</form>
