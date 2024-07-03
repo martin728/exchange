@@ -5,11 +5,13 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {
   DEFAULT_GET_CURRENCY,
   DEFAULT_GIVE_CURRENCY,
+  MAX_AMOUNT,
   Rate,
 } from '../constants';
 
@@ -25,9 +27,9 @@ export class ExchangeComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      giveAmount: new FormControl(null),
+      giveAmount: new FormControl(null, [Validators.maxLength(MAX_AMOUNT)]),
       giveCurrency: new FormControl(DEFAULT_GIVE_CURRENCY),
-      getAmount: new FormControl(null),
+      getAmount: new FormControl(null, [Validators.maxLength(MAX_AMOUNT)]),
       getCurrency: new FormControl(DEFAULT_GET_CURRENCY),
     });
 
@@ -63,9 +65,23 @@ export class ExchangeComponent implements OnInit {
     this.updateAmount(false);
   }
 
-  resetForm() {
+  recount() {
+    this.updateGet();
+    this.updateGive();
+  }
+
+  reset() {
     this.form.controls['giveAmount'].setValue(0);
     this.form.controls['getAmount'].setValue(0);
+  }
+
+  swap() {
+    const giveCurrency = this.form.get('giveCurrency')?.value;
+    const getCurrency = this.form.get('getCurrency')?.value;
+
+    this.form.controls['giveCurrency'].setValue(getCurrency);
+    this.form.controls['getCurrency'].setValue(giveCurrency);
+    this.updateGive();
   }
 
   constructor(private fb: FormBuilder) {}
