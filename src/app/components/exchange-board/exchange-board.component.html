@@ -26,7 +26,7 @@
         formControlName="giveAmount"
         step="10"
         min="0"
-        (input)="updateGive()"
+        (input)="updateAmount(true)"
       />
     </div>
   </div>
@@ -59,7 +59,7 @@
         formControlName="getAmount"
         step="10"
         min="0"
-        (input)="updateGet()"
+        (input)="updateAmount(false)"
       />
     </div>
   </div>

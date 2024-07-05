@@ -42,7 +42,8 @@ header select {
   border-radius: 4px;
 }
 
-header h4 {
+header h2,
+h4 {
   color: #2f4444;
 }
 
@@ -98,7 +99,6 @@ fieldset {
   outline: none;
 }
 
-
 .control:has(input[type="checkbox"]) {
   display: flex;
 }
@@ -147,7 +147,7 @@ fieldset {
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 0.5rem;
-align-items: end;
+  align-items: end;
 }
 
 .control-row .control {
@@ -173,7 +173,7 @@ align-items: end;
 .button:hover,
 .button:focus {
   background-color: #758a8a;
-  color:#142020
+  color: #142020;
 }
 
 .button-flat {
