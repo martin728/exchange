@@ -15,6 +15,7 @@ import {
 } from '../../shared/constants';
 import { Rate } from '../../shared/models';
 import { AmountInputComponent } from '../amount-input/amount-input.component';
+import { CurrencySelectComponent } from '../currency-select/currency-select.component';
 
 @Component({
   selector: 'app-exchange',
@@ -24,6 +25,7 @@ import { AmountInputComponent } from '../amount-input/amount-input.component';
     HttpClientModule,
     CommonModule,
     AmountInputComponent,
+    CurrencySelectComponent,
   ],
   templateUrl: './exchange-board.component.html',
 })
@@ -51,6 +53,14 @@ export class ExchangeComponent implements OnInit {
 
     this.form.get('getAmount')?.valueChanges.subscribe(() => {
       this.updateAmount(false);
+    });
+
+    this.form.get('giveCurrency')?.valueChanges.subscribe(() => {
+      this.recount();
+    });
+
+    this.form.get('getCurrency')?.valueChanges.subscribe(() => {
+      this.recount();
     });
   }
 
@@ -98,9 +108,10 @@ export class ExchangeComponent implements OnInit {
       giveCurrency: getCurrency,
       getCurrency: giveCurrency,
     });
-    this.updateAmount(true);
-  }
 
+    this.updateAmount(true);
+    this.updateAmount(false);
+  }
   getFormValue(value: string) {
     return this.form.get(value);
   }

@@ -1,0 +1,8 @@
+<select [formControl]="control">
+  <option
+    *ngFor="let currency of exchangeRates | keyvalue"
+    [value]="currency.key"
+  >
+    {{ currency.key }}
+  </option>
+</select>

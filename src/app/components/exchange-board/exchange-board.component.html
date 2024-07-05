@@ -5,19 +5,11 @@
   <div class="control-row">
     <div class="control">
       <label for="giveCurrency">You give</label>
-      <select
+      <currency-select
         id="giveCurrency"
-        name="giveCurrency"
         formControlName="giveCurrency"
-        (change)="recount()"
-      >
-        <option
-          *ngFor="let currency of exchangeRates | keyvalue"
-          [value]="currency.key"
-        >
-          {{ currency.key }}
-        </option>
-      </select>
+        [exchangeRates]="exchangeRates"
+      ></currency-select>
     </div>
     <div class="control">
       <amount-input formControlName="giveAmount" />
@@ -31,19 +23,11 @@
   <div class="control-row">
     <div class="control">
       <label for="getCurrency">You get</label>
-      <select
+      <currency-select
         id="getCurrency"
-        name="getCurrency"
         formControlName="getCurrency"
-        (change)="recount()"
-      >
-        <option
-          *ngFor="let currency of exchangeRates | keyvalue"
-          [value]="currency.key"
-        >
-          {{ currency.key }}
-        </option>
-      </select>
+        [exchangeRates]="exchangeRates"
+      ></currency-select>
     </div>
     <div class="control">
       <amount-input formControlName="getAmount" />
