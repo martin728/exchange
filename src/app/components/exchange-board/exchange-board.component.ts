@@ -14,11 +14,17 @@ import {
   MAX_AMOUNT,
 } from '../../shared/constants';
 import { Rate } from '../../shared/models';
+import { AmountInputComponent } from '../amount-input/amount-input.component';
 
 @Component({
   selector: 'app-exchange',
   standalone: true,
-  imports: [ReactiveFormsModule, HttpClientModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule,
+    AmountInputComponent,
+  ],
   templateUrl: './exchange-board.component.html',
 })
 export class ExchangeComponent implements OnInit {
@@ -38,6 +44,14 @@ export class ExchangeComponent implements OnInit {
 
     this.form.get('giveAmount')?.setValue(0);
     this.updateAmount(true);
+
+    this.form.get('giveAmount')?.valueChanges.subscribe(() => {
+      this.updateAmount(true);
+    });
+
+    this.form.get('getAmount')?.valueChanges.subscribe(() => {
+      this.updateAmount(false);
+    });
   }
 
   updateAmount(isGiveUpdate: boolean) {

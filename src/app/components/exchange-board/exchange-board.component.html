@@ -20,14 +20,7 @@
       </select>
     </div>
     <div class="control">
-      <input
-        placeholder="0"
-        type="number"
-        formControlName="giveAmount"
-        step="10"
-        min="0"
-        (input)="updateAmount(true)"
-      />
+      <amount-input formControlName="giveAmount" />
     </div>
   </div>
 
@@ -53,14 +46,7 @@
       </select>
     </div>
     <div class="control">
-      <input
-        placeholder="0"
-        type="number"
-        formControlName="getAmount"
-        step="10"
-        min="0"
-        (input)="updateAmount(false)"
-      />
+      <amount-input formControlName="getAmount" />
     </div>
   </div>
 
