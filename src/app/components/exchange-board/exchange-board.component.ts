@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -8,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Subject, takeUntil } from 'rxjs';
 import {
   DEFAULT_GET_CURRENCY,
   DEFAULT_GIVE_CURRENCY,
@@ -29,11 +36,11 @@ import { CurrencySelectComponent } from '../currency-select/currency-select.comp
   ],
   templateUrl: './exchange-board.component.html',
 })
-export class ExchangeComponent implements OnInit {
+export class ExchangeComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
   @Input() exchangeRates: Rate = {};
   @Input() hasRates: boolean = false;
-
+  private readonly onDestroy = new Subject<void>();
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -43,25 +50,22 @@ export class ExchangeComponent implements OnInit {
       getAmount: new FormControl(null, [Validators.maxLength(MAX_AMOUNT)]),
       getCurrency: new FormControl(DEFAULT_GET_CURRENCY),
     });
+  }
 
-    this.form.get('giveAmount')?.setValue(0);
-    this.updateAmount(true);
+  ngAfterViewInit() {
+    this.subscribeToFormControl('giveAmount', () => this.updateAmount(true));
+    this.subscribeToFormControl('getAmount', () => this.updateAmount(false));
+    this.subscribeToFormControl('giveCurrency', this.recount);
+    this.subscribeToFormControl('getCurrency', this.recount);
+  }
 
-    this.form.get('giveAmount')?.valueChanges.subscribe(() => {
-      this.updateAmount(true);
-    });
-
-    this.form.get('getAmount')?.valueChanges.subscribe(() => {
-      this.updateAmount(false);
-    });
-
-    this.form.get('giveCurrency')?.valueChanges.subscribe(() => {
-      this.recount();
-    });
-
-    this.form.get('getCurrency')?.valueChanges.subscribe(() => {
-      this.recount();
-    });
+  private subscribeToFormControl(
+    controlName: string,
+    callback: () => void
+  ): void {
+    this.form.controls[controlName].valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(callback);
   }
 
   updateAmount(isGiveUpdate: boolean) {
@@ -87,32 +91,43 @@ export class ExchangeComponent implements OnInit {
   }
 
   recount() {
-    this.updateAmount(false);
     this.updateAmount(true);
   }
 
   reset() {
-    this.form.reset({
-      giveAmount: 0,
-      giveCurrency: DEFAULT_GIVE_CURRENCY,
-      getAmount: 0,
-      getCurrency: DEFAULT_GET_CURRENCY,
-    });
+    this.form.setValue(
+      {
+        giveAmount: 0,
+        giveCurrency: DEFAULT_GIVE_CURRENCY,
+        getAmount: 0,
+        getCurrency: DEFAULT_GET_CURRENCY,
+      },
+      { emitEvent: false }
+    );
+
+    this.recount();
   }
 
   swap() {
     const giveCurrency = this.getFormValue('giveCurrency')?.value;
     const getCurrency = this.getFormValue('getCurrency')?.value;
 
-    this.form.patchValue({
-      giveCurrency: getCurrency,
-      getCurrency: giveCurrency,
-    });
+    this.form.patchValue(
+      {
+        giveCurrency: getCurrency,
+        getCurrency: giveCurrency,
+      },
+      { emitEvent: false }
+    );
 
-    this.updateAmount(true);
-    this.updateAmount(false);
+    this.recount();
   }
   getFormValue(value: string) {
     return this.form.get(value);
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
+    this.onDestroy.complete();
   }
 }
